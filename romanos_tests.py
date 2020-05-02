@@ -28,7 +28,7 @@ class RomanNumberTest(unittest.TestCase):
 
     def test_digitos_decrecientes(self):
         self.assertEqual(romanos.romano_a_entero('XVIII'), 18)#con assert nos aseguramos que NO se produzcan errores
-        self.assertEqual(romanos.romano_a_entero('IL'), 'Error en formato')#con assert nos aseguramos que NO se produzcan errores
+        self.assertEqual(romanos.romano_a_entero('IL'), 49)#con assert nos aseguramos que NO se produzcan errores
       
 
 
