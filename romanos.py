@@ -1,8 +1,5 @@
 """funcionalidad del programa convertir romano a entero"""
-romanos = {'M':1000, 'D':500, 'C':100, 'L':50, 'X':10, 'V':5, 'I':1}
-
-existen = ["IX", "IV", "XL", "XC", "CD", "CM"]
- 
+romanos = {'M':1000, 'CM':900, 'D':500, 'CD':400, 'C':100, 'XC':90, 'L':50, 'XL':40, 'X':10, 'IX':9, 'V':5, 'IV':4, 'I':1}
 
 def romano_a_entero(numero_romano):
 
@@ -12,17 +9,17 @@ def romano_a_entero(numero_romano):
     entero = 0#guardar el número entero final
     numRepes = 1#guardo número de repeticiones
     letraAnt = ""#guardo letra anterior para comprobar cumplir NO más de 3 repeticiones    
-    fueResta = False
+    fueResta = False#para comprobar si ha sido resta
       
     
     for letra in numero_romano:#bucle para recorrer cada letra del número romano introducido
 
         if letra in romanos:
-            if letraAnt == '' or romanos[letraAnt] >= romanos[letra]:
-                entero += romanos[letra]
+            if letraAnt == '' or romanos[letraAnt] >= romanos[letra]:#si letra está vacía o el valor de letra anterior es mayor o igual a valor letra actual
+                entero += romanos[letra]#sumatorio de entero más entero y valor letra actual
                 fueResta = False
             else:
-                if letraAnt + letra in existen and numRepes < 2 and not fueResta:#si letraAnta+letra está en lista existen y 
+                if letraAnt + letra in romanos.keys() and numRepes < 2 and not fueResta:#si letraAnta+letra está en diccionario buscado por clave y número de repeticiones es menor de 2 y no ha sido resta
                     entero = entero - romanos[letraAnt] * 2 + romanos[letra]#número entero menos 2 veces el valor de letra anterior más valor nueva letra
                     fueResta = True
                 else:
@@ -41,3 +38,35 @@ def romano_a_entero(numero_romano):
         letraAnt = letra#igualo letra nueva a letra anterior para saberla y así poder comparar si ya ha salido con anterioridad
 
     return entero
+
+
+
+
+def entero_a_romano(valor):
+    if valor > 3999:
+        return "Overflow"
+    
+    componentes = descomponer(valor)
+
+    res = ""
+    for valor in componentes:
+        while valor > 0:
+            k, v = busca_valor_menor_o_igual(valor)
+            valor -= v
+            res += k
+        
+    return res
+
+def busca_valor_menor_o_igual(v):
+    for key, value in romanos.items():
+        if value <= v:
+            return key, value
+
+def descomponer(numero):
+    res = []
+    for orden in range(3,0,-1):
+        resto = numero % 10**orden
+        res.append(numero-resto)
+        numero = resto
+    res.append(numero)
+    return res
