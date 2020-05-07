@@ -15,6 +15,20 @@ class RomanNumber():
     'IV':4, 
     'I':1}
 
+    def __init__(self, valor):#método iniciar
+        if isinstance(valor, str):
+            self.value = self.romano_a_entero(valor)
+            if self.value == "Error en formato":
+                self.rvalue = self.value
+            else:
+                self.rvalue = valor
+            
+        else:
+            self.value = valor
+            self.rvalue = self.entero_a_romano()
+            if self.rvalue == "Overflow":
+                self.value = self.rvalue
+
     def romano_a_entero(self, numero_romano):
 
         if numero_romano == "":#si no se ha introducido letra romana
@@ -53,12 +67,11 @@ class RomanNumber():
 
         return entero
 
-
-    def entero_a_romano(self, valor):
-        if valor > 3999:
+    def entero_a_romano(self):
+        if self.value > 3999 or self.value < 1:
             return "Overflow"
         
-        componentes = self.__descomponer(valor)
+        componentes = self.__descomponer(self.value)
 
         res = ""
         for valor in componentes:
@@ -82,3 +95,36 @@ class RomanNumber():
             numero = resto
         res.append(numero)
         return res
+
+    def __str__(self):
+        return self.rvalue
+    
+    def __repr__(self):
+        return self.rvalue
+
+    def __add__(self, other):#parámetros que solo existen dentro de esta función
+        if isinstance(other,int):
+            suma = self.value + other
+        else:
+            suma = self.value + other.value
+        
+        resultado = RomanNumber(suma)
+        return resultado
+
+    def __radd__(self, other):
+        return self.__add__(other)
+      
+    def __sub__(self, other):
+        if isinstance(other,int):
+            resta = self.value - other
+        else:
+            resta = self.value - other.value
+        
+        resultado = RomanNumber(resta)
+        return resultado
+    
+    def __rsub__(self, other):
+        return self.__sub__(other)
+    
+    def __eq__(self, other):
+        return self.value == other.value

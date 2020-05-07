@@ -2,95 +2,54 @@ import unittest
 import cromanos
 
 class RomanNumberTest(unittest.TestCase):
-    def setUp(self):#para crear un fichero de prueba para cada test
-        self.nr = cromanos.RomanNumber()
+    def test_crea_romano(self):
+       nr = cromanos.RomanNumber(25)
+       self.assertEqual(nr.value,25)
+       self.assertEqual(nr.rvalue,"XXV")
 
-    #def teardown(self):#para cerrar el fichero de prueba
+       snr = cromanos.RomanNumber("XXIV")
+       self.assertEqual(snr.value,24)
+       self.assertEqual(snr.rvalue,"XXIV")
 
-    def test_symbols_romans(self):
-        self.assertEqual(self.nr.romano_a_entero('I'), 1)#con assert nos aseguramos que NO se produzcan errores
-        self.assertEqual(self.nr.romano_a_entero('V'), 5)#con assert nos aseguramos que NO se produzcan errores
-        self.assertEqual(self.nr.romano_a_entero('X'), 10)#con assert nos aseguramos que NO se produzcan errores
-        self.assertEqual(self.nr.romano_a_entero('L'), 50)#con assert nos aseguramos que NO se produzcan errores
-        self.assertEqual(self.nr.romano_a_entero('C'), 100)#con assert nos aseguramos que NO se produzcan errores
-        self.assertEqual(self.nr.romano_a_entero('D'), 500)#con assert nos aseguramos que NO se produzcan errores
-        self.assertEqual(self.nr.romano_a_entero('M'), 1000)#con assert nos aseguramos que NO se produzcan errores
-        self.assertEqual(self.nr.romano_a_entero('K'), 'Error en formato')#con assert nos aseguramos que NO se produzcan errores
-        self.assertEqual(self.nr.romano_a_entero(''), 'Error en formato')#con assert nos aseguramos que NO se produzcan errores
+       tnr = cromanos.RomanNumber("XXXX")
+       self.assertEqual(tnr.value, "Error en formato" )
+       self.assertEqual(tnr.rvalue, "Error en formato" )
+
+       cnr = cromanos.RomanNumber(0)
+       self.assertEqual(cnr.value, "Overflow")
+       self.assertEqual(cnr.rvalue, "Overflow")
+
+       qnr = cromanos.RomanNumber(4000)
+       self.assertEqual(qnr.value, "Overflow")
+       self.assertEqual(qnr.value, "Overflow")
+
+    def test_representation(self):
+        nr = cromanos.RomanNumber(25)
+        self.assertEqual(str(nr),"XXV")
+        #self.assertEqual(nr,"XXV")#pendiente de arreglar por ramón
     
-    def test_repetitions(self):
-        self.assertEqual(self.nr.romano_a_entero('II'), 2)#con assert nos aseguramos que NO se produzcan errores
-        self.assertEqual(self.nr.romano_a_entero('MMM'), 3000)#con assert nos aseguramos que NO se produzcan errores
-        self.assertEqual(self.nr.romano_a_entero('KKK'), 'Error en formato')#con assert nos aseguramos que NO se produzcan errores
-        self.assertEqual(self.nr.romano_a_entero('MK'), 'Error en formato')#con assert nos aseguramos que NO se produzcan errores
-    
-    def test_only_three(self):
-        self.assertEqual(self.nr.romano_a_entero('IIII'), 'Error en formato')#con assert nos aseguramos que NO se produzcan errores
+    def test_equal_romans(self):
+        nr1 = cromanos.RomanNumber(25)
+        nr2 = cromanos.RomanNumber("XXV")
+        self.assertEqual(nr1, nr2)
 
-    def test_digitos_decrecientes(self):
-        self.assertEqual(self.nr.romano_a_entero('XVIII'), 18)#con assert nos aseguramos que NO se produzcan errores
-        self.assertEqual(self.nr.romano_a_entero('XI'), 11)#con assert nos aseguramos que NO se produzcan errores
-        self.assertEqual(self.nr.romano_a_entero('XV'), 15)#con assert nos aseguramos que NO se produzcan errores
-        self.assertEqual(self.nr.romano_a_entero('XX'), 20)#con assert nos aseguramos que NO se produzcan errores
-        self.assertEqual(self.nr.romano_a_entero('CI'), 101)#con assert nos aseguramos que NO se produzcan errores
-       
-    
-    def test_digitos_restan(self):
-        self.assertEqual(self.nr.romano_a_entero('XIX'), 19)#con assert nos aseguramos que NO se produzcan errores
-       
-    def test_resta_separacion_un_grado(self):
-        self.assertEqual(self.nr.romano_a_entero('XC'), 90)#con assert nos aseguramos que NO se produzcan errores
-        self.assertEqual(self.nr.romano_a_entero('XD'), "Error en formato")#con assert nos aseguramos que NO se produzcan errores  
-        self.assertEqual(self.nr.romano_a_entero('IL'), "Error en formato")#con assert nos aseguramos que NO se produzcan errores
-        self.assertEqual(self.nr.romano_a_entero('XM'), "Error en formato")#con assert nos aseguramos que NO se produzcan errores
+    def test_add(self):
+        nr1 = cromanos.RomanNumber(1)
+        nr2 = cromanos.RomanNumber("XXIV")
+        nr3 = nr1 + nr2
+        self.assertEqual(nr1 + nr2, cromanos.RomanNumber(25))
+        self.assertEqual(nr3.value, 25)
+        self.assertTrue(isinstance(nr3, cromanos.RomanNumber))
 
-    def test_resta_de_multiplos_5_NO(self):
-        self.assertEqual(self.nr.romano_a_entero('VC'), "Error en formato")#con assert nos aseguramos que NO se produzcan errores
-        self.assertEqual(self.nr.romano_a_entero('XCV'), 95)#con assert nos aseguramos que NO se produzcan errores
+    def test_add_integer(self):
+        nr1 = cromanos.RomanNumber("XXIII")
+        nr3 = nr1 + 1
+        self.assertEqual(nr3.value, 24)
+        self.assertTrue(isinstance(nr3, cromanos.RomanNumber))
 
-    def test_resta_un_solo_simbolo(self):
-        self.assertEqual(self.nr.romano_a_entero('XXL'), "Error en formato")#con assert nos aseguramos que NO se produzcan errores
-        self.assertEqual(self.nr.romano_a_entero('IXL'), "Error en formato")#con assert nos aseguramos que NO se produzcan errores
-        self.assertEqual(self.nr.romano_a_entero('XXX'), 30)#con assert nos aseguramos que NO se produzcan errores
-
-class IntegerToRomanTest(unittest.TestCase):
-    def setUp(self):
-        self.nr = cromanos.RomanNumber()
-
-    def test_traduccion_grupos_de_valor_simples(self):
-        self.assertEqual(self.nr.entero_a_romano(1), "I")
-        self.assertEqual(self.nr.entero_a_romano(10), "X")
-        self.assertEqual(self.nr.entero_a_romano(5), "V")
-        self.assertEqual(self.nr.entero_a_romano(50), "L")
-        self.assertEqual(self.nr.entero_a_romano(100), "C")
-        self.assertEqual(self.nr.entero_a_romano(500), "D")
-        self.assertEqual(self.nr.entero_a_romano(1000), "M")
-
-    def test_traduccion_grupos_de_valor_complejos_unidades(self):        
-        self.assertEqual(self.nr.entero_a_romano(2), "II")
-        self.assertEqual(self.nr.entero_a_romano(3), "III")
-        self.assertEqual(self.nr.entero_a_romano(4), "IV")
-        self.assertEqual(self.nr.entero_a_romano(6), "VI")
-        self.assertEqual(self.nr.entero_a_romano(7), "VII")
-        self.assertEqual(self.nr.entero_a_romano(8), "VIII")
-        self.assertEqual(self.nr.entero_a_romano(9), "IX")
-        self.assertEqual(self.nr.entero_a_romano(30), "XXX")
-        self.assertEqual(self.nr.entero_a_romano(400), "CD")
-        self.assertEqual(self.nr.entero_a_romano(3000), "MMM")
-        
-    def test_busca_valor(self):
-        self.assertEqual(self.nr._RomanNumber__busca_valor_menor_o_igual(2), ("I", 1))#con _RomanNumber__accedemos al método privado
-        self.assertEqual(self.nr._RomanNumber__busca_valor_menor_o_igual(5), ("V", 5))
-        self.assertEqual(self.nr._RomanNumber__busca_valor_menor_o_igual(7), ("V", 5))
-
-    def test_descomponer(self):
-        self.assertEqual(self.nr._RomanNumber__descomponer(1492), [1000,400,90,2])
-        self.assertEqual(self.nr._RomanNumber__descomponer(2342), [2000,300,40,2])
-
-    def test_entero_a_romano(self):
-        self.assertEqual(self.nr.entero_a_romano(1492), "MCDXCII")
-        self.assertEqual(self.nr.entero_a_romano(3999), "MMMCMXCIX")
-        self.assertEqual(self.nr.entero_a_romano(4000), "Overflow")
+        nr2 = 1 + nr1
+        self.assertEqual(nr2.value, 24)
+        self.assertTrue(isinstance(nr2, cromanos.RomanNumber))    
 
 
 
